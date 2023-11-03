@@ -1,0 +1,39 @@
+{
+  "name": "testapp",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "expo": "~49.0.15",
+    "expo-auth-session": "~5.0.2",
+    "expo-crypto": "~12.4.1",
+    "expo-google-sign-in": "^11.0.0",
+    "expo-random": "~13.2.0",
+    "expo-status-bar": "~1.6.0",
+    "expo-web-browser": "~12.3.2",
+    "jotai": "^2.5.0",
+    "oidc-client": "^1.11.5",
+    "react": "18.2.0",
+    "react-native": "0.72.6",
+    "react-native-app-auth": "^7.1.0",
+    "react-native-inappbrowser-reborn": "^3.7.0",
+    "react-native-pkce-challenge": "^5.2.0",
+    "react-native-webview": "^13.6.2",
+    "react-query": "^3.39.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@tsconfig/react-native": "^3.0.2",
+    "@types/jest": "^29.5.7",
+    "@types/react": "^18.2.34",
+    "@types/react-test-renderer": "^18.0.5",
+    "typescript": "^5.2.2"
+  },
+  "private": true
+}
