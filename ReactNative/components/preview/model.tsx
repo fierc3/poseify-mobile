@@ -1,6 +1,7 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
-import { BVHImport } from '../../lib/BvhImporter';
+//import { BVHImport } from '../../lib/BvhImporter';
+import { BVHImport } from '../../helpers/bvhImporter';
 import * as THREE from 'three';
 
 export type Props = {
@@ -28,8 +29,9 @@ export const Model: React.FC<Props> = ({ bvhData }) => {
         var lines = (bvhData === null ? file : bvhData).split(/[\r\n]+/g);
         //console.log("lines", lines)
         // import BVH file
-        var root = BVHImport.readBvh(lines);
-        var animation = BVHImport.toTHREE(root);
+        var bvhImporter = new BVHImport();
+        var root = bvhImporter.readBvh(lines);
+        var animation = bvhImporter.toTHREE(root);
 
         // create dummy geometry to "animate"
         const geometry = new THREE.BufferGeometry();
@@ -59,7 +61,7 @@ export const Model: React.FC<Props> = ({ bvhData }) => {
         skeletonHelper.scale.set(10, 10, 10);
         (skeletonHelper.material as any).linewidth = 20; // types doesn't have this correctly
         //mesh.rotateX(Math.PI / 2);
-        mesh.rotateOnAxis(new THREE.Vector3(1,0,0),Math.PI / 2);
+        mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
 
         if (!groupRef.current) return;
         groupRef.current.add(skeletonHelper);
