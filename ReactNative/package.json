@@ -9,23 +9,30 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-three/fiber": "^8.15.9",
+    "@types/three": "^0.158.1",
     "axios": "^1.6.0",
     "expo": "~49.0.15",
     "expo-auth-session": "~5.0.2",
     "expo-crypto": "~12.4.1",
+    "expo-file-system": "~15.4.4",
+    "expo-gl": "~13.0.1",
     "expo-google-sign-in": "^11.0.0",
     "expo-random": "~13.2.0",
     "expo-status-bar": "~1.6.0",
     "expo-web-browser": "~12.3.2",
     "jotai": "^2.5.0",
     "oidc-client": "^1.11.5",
+    "r3f-native-orbitcontrols": "^1.0.8",
     "react": "18.2.0",
     "react-native": "0.72.6",
     "react-native-app-auth": "^7.1.0",
     "react-native-inappbrowser-reborn": "^3.7.0",
+    "react-native-paper": "^5.11.1",
     "react-native-pkce-challenge": "^5.2.0",
     "react-native-webview": "^13.6.2",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "three": "^0.158.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
