@@ -10,7 +10,7 @@ const apiCall = async (url: string , token: string) => {
         },
       }).catch(e => console.error("ex", JSON.stringify(e)));;
   
-      if(!response || !response.data){
+      if(!response){
         var noDataError = new Error("Data is missing")
         console.error(noDataError);
         throw noDataError;

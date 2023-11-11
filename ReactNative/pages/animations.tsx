@@ -3,8 +3,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAccessToken } from '../hooks/use-access-token';
 import { getUserEstimations } from '../helpers/api';
 import { IEstimation } from '../helpers/api.types';
-import { Viewer } from '../components/preview/viewer';
 import { useNav } from '../hooks/use-nav';
+import useInterval from '../hooks/use-interval';
 
 export type Props = {
     userName: string;
@@ -16,7 +16,10 @@ const Animations: React.FC<Props> = ({
     const { accessToken } = useAccessToken();
     const { setEstimation } = useNav();
     const [estimations, setEstimations] = useState<IEstimation[]>([]);
-    //const [selectedEstimation, setSelectedEstimation] = useState<IEstimation | null>(null)
+
+    const refreshTimer = 10000;
+    useInterval(() => getUserEstimations(accessToken.accessToken).then(result => (console.log(`Updated after ${refreshTimer} seconds` ), setEstimations(result))), 10000)
+
 
     useEffect(() => {
         getUserEstimations(accessToken.accessToken).then(result => setEstimations(result))

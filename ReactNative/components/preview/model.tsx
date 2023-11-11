@@ -1,6 +1,5 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
-//import { BVHImport } from '../../lib/BvhImporter';
 import { BVHImport } from '../../helpers/bvhImporter';
 import * as THREE from 'three';
 
