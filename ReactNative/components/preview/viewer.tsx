@@ -42,7 +42,7 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
 
 
     return (
-        <>
+        <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center', display: estimation === null || bvhData === null ? 'none' : 'flex'  }}>
             <Canvas
                 camera={camera}
                 gl={{ antialias: true }}
@@ -72,7 +72,7 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
                     <Button disabled={bvhData === null} title="close" onPress={() => (setEstimation(null), setBvhData(null))} />
                 </>
             )}
-        </>
+        </View>
     )
 }
 
