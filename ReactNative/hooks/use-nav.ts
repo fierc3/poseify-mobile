@@ -18,7 +18,11 @@ const useNav = () => {
         setNav(x => ({...x, selectedEstimation: estimation}))
     }
 
-    return { getCurrentPage, getEstimation, setEstimation };
+    const setCurrentPage = (page: number) => {
+        setNav(x => ({...x, currentPage: page}))
+    }
+
+    return { getCurrentPage, getEstimation, setEstimation, setCurrentPage };
   };
   
 

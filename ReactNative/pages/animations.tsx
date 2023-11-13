@@ -18,8 +18,7 @@ const Animations: React.FC<Props> = ({
     const [estimations, setEstimations] = useState<IEstimation[]>([]);
 
     const refreshTimer = 10000;
-    useInterval(() => getUserEstimations(accessToken.accessToken).then(result => (console.log(`Updated after ${refreshTimer} seconds` ), setEstimations(result))), 10000)
-
+    useInterval(() => getUserEstimations(accessToken.accessToken).then(result => (console.log(`Updated after ${refreshTimer}` ), setEstimations(result))), 10000)
 
     useEffect(() => {
         getUserEstimations(accessToken.accessToken).then(result => setEstimations(result))

@@ -7,15 +7,43 @@ import { LogBox } from 'react-native';
 import { useNav } from './hooks/use-nav';
 import { Viewer } from './components/preview/viewer';
 import { MD3LightTheme as DefaultTheme, PaperProvider, BottomNavigation } from 'react-native-paper';
+import Recording from './pages/recording';
 
 
 const animationsRoute = () => <Animations userName='User' />;
-const recordRoute = () => <Text>Ohhh</Text>
+const recordRoute = () => <Recording />
 const settingsRoute = () => <Text>settings</Text>
+
+
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can log the error to an error reporting service
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any fallback UI
+      return <Text>Something went wrong.</Text>;
+    }
+
+    return this.props.children;
+  }
+}
+
 
 export default function App() {
   const { isLoggedIn } = useAuthSession();
-  const { getEstimation } = useNav();
+  const { getEstimation, getCurrentPage, setCurrentPage } = useNav();
 
   // Generally a lot of issues with ThreeJs and expo apparently (recent issues: https://github.com/pmndrs/react-three-fiber/discussions/2823)
   // Thus we ignore some logs
@@ -32,7 +60,6 @@ export default function App() {
     },
   };
 
-  const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'animation', title: 'Animations', focusedIcon: 'animation-play', unfocusedIcon: 'animation-play-outline' },
     { key: 'record', title: 'Record', focusedIcon: 'record-circle-outline' },
@@ -45,23 +72,37 @@ export default function App() {
     settings: settingsRoute,
   });
 
-  return (
-    <PaperProvider theme={theme}>
-      {isLoggedIn ? <>
-        {getEstimation() === null &&
-          <BottomNavigation
-            navigationState={{ index, routes }} // is marked as deperecated but docs doesn't show another solution 🤷
-            onIndexChange={setIndex}
-            renderScene={renderScene}
-          />
-        }
-      </> : <>
-        <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
-          <Login />
-        </View>
-      </>}
-        <Viewer estimation={getEstimation()} />
+  let index = getCurrentPage();
+  const isRecording = getCurrentPage() === 1;
 
-    </PaperProvider>
+  return (
+    <ErrorBoundary>
+      <PaperProvider theme={theme}>
+        {
+          isRecording &&
+          <Recording />
+        }
+
+        {
+          !isRecording &&
+          <>
+            {isLoggedIn ? <>
+              {getEstimation() === null &&
+                <BottomNavigation
+                  navigationState={{ index, routes }} // is marked as deperecated but docs doesn't show another solution 🤷
+                  onIndexChange={setCurrentPage}
+                  renderScene={renderScene}
+                />
+              }
+            </> : <>
+              <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
+                <Login />
+              </View>
+            </>}
+            <Viewer estimation={getEstimation()} />
+          </>
+        }
+      </PaperProvider>
+    </ErrorBoundary>
   );
 }
