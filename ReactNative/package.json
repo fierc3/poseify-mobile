@@ -30,7 +30,8 @@
     "expo-constants": "~14.4.2",
     "expo-av": "~13.4.1",
     "expo-file-system": "~15.4.4",
-    "expo-splash-screen": "~0.20.5"
+    "expo-splash-screen": "~0.20.5",
+    "expo-sharing": "~11.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

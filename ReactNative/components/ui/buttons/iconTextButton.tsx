@@ -1,23 +1,16 @@
 import * as React from 'react';
-import { View, Text, StyleProp, ViewStyle } from 'react-native';
+import { View, Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
+import { iconButtonProps } from './buttons.types';
 
-export type Props = {
-    onPress: () => void,
-    iconColor: string,
-    icon: string,
-    text: string,
-    containerStyle?: StyleProp<ViewStyle> | undefined,
-    iconSize: number
-};
-
-export const IconTextButton: React.FC<Props> = ({ onPress, icon, iconColor, text, containerStyle, iconSize }) => {
+export const IconTextButton: React.FC<iconButtonProps> = ({ onPress, icon, iconColor, text, containerStyle, iconSize, disabled = false }) => {
     return (
         <View style={containerStyle ?? { alignItems: 'center' }}>
             <IconButton
-                icon={icon}
+                icon={icon ?? 'alien'} // oh no 👽
                 iconColor={iconColor}
-                size={iconSize}
+                size={iconSize ?? 20}
+                disabled={disabled}
                 onPress={onPress} />
             <Text style={{ color: iconColor }}>{text}</Text>
         </View>
