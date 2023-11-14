@@ -1,12 +1,13 @@
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Model } from './model';
-import { IEstimation } from '../../helpers/api.types';
+import { AttachmentType, IEstimation } from '../../helpers/api.types';
 import { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { getBvh } from '../../helpers/api';
 import { useAccessToken } from '../../hooks/use-access-token';
 import { useNav } from '../../hooks/use-nav';
+import { ShareFileButton } from '../ui/buttons/shareFileButton';
 
 
 export type Props = {
@@ -42,7 +43,7 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
 
 
     return (
-        <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center', display: estimation === null || bvhData === null ? 'none' : 'flex'  }}>
+        <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center', display: estimation === null || bvhData === null ? 'none' : 'flex' }}>
             <Canvas
                 camera={camera}
                 gl={{ antialias: true }}
@@ -70,6 +71,8 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
                     <Text style={styles.greeting}>{estimation.displayName}</Text>
                     <Text>{estimation.tags.join(",")}</Text>
                     <Button disabled={bvhData === null} title="close" onPress={() => (setEstimation(null), setBvhData(null))} />
+                    <ShareFileButton attachmentType={AttachmentType.Bvh} estimation={estimation} text='Share BVH'/>
+                    <ShareFileButton attachmentType={AttachmentType.Fbx} estimation={estimation} text='Share FBX'/>
                 </>
             )}
         </View>
