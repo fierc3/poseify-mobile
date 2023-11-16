@@ -2,6 +2,7 @@ import { FlatList } from "react-native";
 import { EstimationState, IEstimation } from "../../../helpers/api.types";
 import { Divider, List, Text } from "react-native-paper";
 import { TextSpinner } from "../loading/textSpinner";
+import moment from 'moment-timezone';
 
 type EndlessListProps = {
     estimations: IEstimation[],
@@ -24,18 +25,20 @@ const waitingEntry = () => {
 
 const divider = () => <Divider leftInset={true} />
 
-const listItem = (item: IEstimation, onPress?: (estimation: IEstimation) => void | undefined) => (
-    <List.Item
+const listItem = (item: IEstimation, onPress?: (estimation: IEstimation) => void | undefined) => {
+    moment.tz.setDefault("Europe/Zurich");
+
+    return <List.Item
         title={item.displayName}
         description={item.tags.join(",")}
         left={() =>
             (item.state === EstimationState.Failed) ? errorEntry()
                 : (item.state === EstimationState.Success ? confirmEntry() : waitingEntry())
         }
-        right={() => <Text variant="labelSmall">8m ago</Text>}
+        right={() => <Text variant="labelSmall">{moment(item.modifiedDate).fromNow()}</Text>}
         style={{ minHeight: 100 }}
         onPress={() => onPress?.(item)} />
-)
+}
 
 export const EndlessList: React.FC<EndlessListProps> = ({
     estimations,
