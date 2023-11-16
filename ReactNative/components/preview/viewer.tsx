@@ -83,7 +83,7 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
                 {estimation && isLoaded && (
                     <View style={{ flexGrow: 0.5, justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}>
                         <View style={{ justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}>
-                            {estimation.tags.map(tag => <Chip icon="tag">{tag}</Chip>)}
+                            {estimation.tags.map((tag, i) => <Chip key={i} icon="tag">{tag}</Chip>)}
                         </View>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}>
