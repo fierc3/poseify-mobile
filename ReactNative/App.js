@@ -87,13 +87,14 @@ export default function App() {
           !isRecording &&
           <>
             {isLoggedIn ? <>
-              {getEstimation() === null &&
-                <BottomNavigation
-                  navigationState={{ index, routes }} // is marked as deperecated but docs doesn't show another solution 🤷
-                  onIndexChange={setCurrentPage}
-                  renderScene={renderScene}
-                />
-              }
+
+              <BottomNavigation
+                style={{ display: getEstimation() === null ? 'flex' : 'none'}}
+                navigationState={{ index, routes }} // is marked as deperecated but docs doesn't show another solution 🤷
+                onIndexChange={setCurrentPage}
+                renderScene={renderScene}
+              />
+
             </> : <>
               <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
                 <Login />
