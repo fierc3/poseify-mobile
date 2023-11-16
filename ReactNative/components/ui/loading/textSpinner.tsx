@@ -11,7 +11,7 @@ export const TextSpinner: React.FC<Props> = ({ label }) => {
     return (
         <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" />
-            <Text style={styles.label}>{label}</Text>
+            <Text variant='labelSmall' style={styles.label}>{label}</Text>
         </View>
     );
 }
@@ -24,6 +24,5 @@ const styles = StyleSheet.create({
     },
     label: {
         marginTop: 10,
-        fontSize: 16,
     },
 });

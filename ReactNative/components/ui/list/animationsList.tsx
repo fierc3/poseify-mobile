@@ -33,7 +33,7 @@ export const AnimationsList: React.FC = () => {
 
         <View style={styles.container}>
             <>
-                <EndlessList displaySpinner={!initLoaded} estimations={estimations} loadData={() => updateList} onPress={(e) => setEstimation(e)} />
+                <EndlessList displaySpinner={!initLoaded} estimations={estimations} loadData={() => updateList()} onPress={(e) => setEstimation(e)} />
             </>
         </View>
     );
