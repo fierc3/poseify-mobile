@@ -11,7 +11,7 @@ export const Model: React.FC<Props> = ({ bvhData }) => {
     const mixerRef = useRef<{ update: (delta: number) => void, clipAction: (clip: any) => any } | null>(null);
     const groupRef = useRef<THREE.Group<THREE.Object3DEventMap>>(null);
 
-    useFrame((state, delta) => {
+    useFrame((_state, delta) => {
         if (!mixerRef?.current) return;
 
         // Update animation frame when possible
@@ -20,7 +20,7 @@ export const Model: React.FC<Props> = ({ bvhData }) => {
 
     useEffect(() => {
 
-        if (groupRef === undefined) return;
+        if (groupRef.current === undefined) return;
 
         groupRef.current?.children.forEach(x => groupRef.current?.remove(x))
 
@@ -32,24 +32,38 @@ export const Model: React.FC<Props> = ({ bvhData }) => {
         var root = bvhImporter.readBvh(lines);
         var animation = bvhImporter.toTHREE(root);
 
-        // create dummy geometry to "animate"
-        const geometry = new THREE.BufferGeometry();
-        // create a simple square shape. We duplicate the top left and bottom right
-        // vertices because each vertex needs to appear once per triangle.
-        const vertices = new Float32Array([
-            -1.0, -1.0, 1.0, // v0
-            1.0, -1.0, 1.0, // v1
-            1.0, 1.0, 1.0, // v2
+        const geometry = new THREE.CylinderGeometry( 5, 5, 5, 5, 15, false, 30 );
 
-            1.0, 1.0, 1.0, // v3
-            -1.0, 1.0, 1.0, // v4
-            -1.0, -1.0, 1.0  // v5
-        ]);
-        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-
+        // create the skin indices and skin weights manually
+        // (typically a loader would read this data from a 3D model for you)
+        // we create this "artifical" geometry so that threejs is happy and doesn't throw an error
+        
+        const position = geometry.attributes.position;
+        
+        const vertex = new THREE.Vector3();
+        
+        const skinIndices = [];
+        const skinWeights = [];
+        
+        for ( let i = 0; i < position.count; i ++ ) {
+        
+            vertex.fromBufferAttribute( position, i );
+        
+            // compute skinIndex and skinWeight based on some configuration data
+            const y = ( vertex.y + 22 );
+            const skinIndex = Math.floor( y / 22 );
+            const skinWeight = ( y % 22 ) / 22;
+            skinIndices.push( skinIndex, skinIndex + 1, 0, 0 );
+            skinWeights.push( 1 - skinWeight, skinWeight, 0, 0 );
+        }
+        
+        geometry.setAttribute( 'skinIndex', new THREE.Uint16BufferAttribute( skinIndices, 4 ) );
+        geometry.setAttribute( 'skinWeight', new THREE.Float32BufferAttribute( skinWeights, 4 ) );
+        
+        // create skinned mesh and skeleton
         const material = new THREE.MeshNormalMaterial();
         material.visible = false; // we only want to see the skeleton helper
-        var mesh = new THREE.SkinnedMesh(geometry, material);
+        const mesh = new THREE.SkinnedMesh( geometry, material );
 
         // bind skeleton
         mesh.add(animation.skeleton.bones[0]);
@@ -59,11 +73,10 @@ export const Model: React.FC<Props> = ({ bvhData }) => {
         const skeletonHelper = new THREE.SkeletonHelper(animation.skeleton.bones[0]);
         skeletonHelper.scale.set(10, 10, 10);
         (skeletonHelper.material as any).linewidth = 20; // types doesn't have this correctly
-        //mesh.rotateX(Math.PI / 2);
         mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
 
         if (!groupRef.current) return;
-        groupRef.current.add(skeletonHelper);
+        groupRef.current.add(skeletonHelper)
         groupRef.current.add(mesh);
 
         // Play BVH animation
