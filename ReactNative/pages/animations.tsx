@@ -1,56 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useAccessToken } from '../hooks/use-access-token';
-import { getUserEstimations } from '../helpers/api';
-import { IEstimation } from '../helpers/api.types';
-import { useNav } from '../hooks/use-nav';
-import useInterval from '../hooks/use-interval';
+import React, {  } from 'react';
+import { Appbar } from 'react-native-paper';
+import { AnimationsList } from '../components/ui/list/animationsList';
 
-export type Props = {
-    userName: string;
-};
 
-const Animations: React.FC<Props> = ({
-    userName,
-}) => {
-    const { accessToken } = useAccessToken();
-    const { setEstimation } = useNav();
-    const [estimations, setEstimations] = useState<IEstimation[]>([]);
-
-    const refreshTimer = 10000;
-    useInterval(() => getUserEstimations(accessToken.accessToken).then(result => (console.log(`Updated after ${refreshTimer}` ), setEstimations(result))), 10000)
-
-    useEffect(() => {
-        getUserEstimations(accessToken.accessToken).then(result => setEstimations(result))
-    }, [accessToken.accessToken])
-
+export const Animations: React.FC = () => {
     return (
-        <View style={styles.container}>
-            <>
-                <Text>Animations Page</Text>
-                <Text style={styles.greeting}>Hi, {userName}👋</Text>
-                {estimations.map(e =>
-                    <TouchableOpacity key={e.internalGuid} onPress={() => setEstimation(e)}>
-                        <Text>{e.displayName}</Text>
-                    </TouchableOpacity>
-                )}
-            </>
-
-        </View>
+        <>
+            <Appbar.Header style={{ display: 'flex', flexDirection: 'column' }}>
+                <Appbar.Content title="Animations" style={{ justifyContent: 'center' }} />
+            </Appbar.Header>
+            <AnimationsList />
+        </>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    greeting: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        margin: 16,
-    },
-});
 
 export default Animations;
