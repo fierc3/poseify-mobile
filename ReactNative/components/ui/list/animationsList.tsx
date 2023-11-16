@@ -6,12 +6,13 @@ import { getUserEstimations } from "../../../helpers/api";
 import { EndlessList } from "./endlessList";
 import { StyleSheet, View } from "react-native";
 import useInterval from "../../../hooks/use-interval";
+import { useEstimations } from "../../../hooks/use-estimations";
 
 export const AnimationsList: React.FC = () => {
     console.log("|| AnimationList")
     const { accessToken } = useAccessToken();
+    const { getEstimations, setEstimations } = useEstimations();
     const { setEstimation } = useNav();
-    const [estimations, setEstimations] = useState<IEstimation[]>([]);
     const [initLoaded, setInitiLoaded] = useState<boolean>(false);
 
     const updateList = async () => {
@@ -33,7 +34,7 @@ export const AnimationsList: React.FC = () => {
 
         <View style={styles.container}>
             <>
-                <EndlessList displaySpinner={!initLoaded} estimations={estimations} loadData={() => updateList()} onPress={(e) => setEstimation(e)} />
+                <EndlessList displaySpinner={!initLoaded} estimations={getEstimations()} loadData={() => updateList()} onPress={(e) => setEstimation(e)} />
             </>
         </View>
     );

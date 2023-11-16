@@ -7,6 +7,7 @@ export type Props = {};
 
 const Login: React.FC<Props> = ({
 }) => {
+    console.log("|| Login")
     const { isLoggedIn, promptAsync, request, redirectUri, response } = useAuthSession()
     const { retrieveAccessToken, accessToken } = useAccessToken();
 
