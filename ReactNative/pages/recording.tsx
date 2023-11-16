@@ -82,8 +82,6 @@ const Recording: React.FC<Props> = ({
                         />
 
                         {!cameraLoaded && (<Text style={{ color: "purple" }}>Loading...</Text>)}
-
-
                         {cameraLoaded && !isCameraRecording && (
                             <>
                                 <IconButton
