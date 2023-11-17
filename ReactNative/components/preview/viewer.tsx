@@ -10,6 +10,7 @@ import { useNav } from '../../hooks/use-nav';
 import { ShareFileButton } from '../ui/buttons/shareFileButton';
 import { Appbar, Chip } from 'react-native-paper';
 import { TextSpinner } from '../ui/loading/textSpinner';
+import { getIconName } from '../../helpers/tags';
 
 
 export type Props = {
@@ -44,7 +45,6 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
         const fetchData = async () => setBvhData(await getBvh(estimation, accessToken.accessToken));
         fetchData();
     }, [estimation])
-
 
     return (
         <>
@@ -82,8 +82,10 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
                 </Canvas>
                 {estimation && isLoaded && (
                     <View style={{ flexGrow: 0.5, justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}>
-                        <View style={{ justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}>
-                            {estimation.tags.map((tag, i) => <Chip key={i} icon="tag">{tag}</Chip>)}
+                        <View style={{ flexGrow: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: '100%', gap: 4 }}>
+                            {   // workaround for tags bug
+                                (estimation?.tags[0] ?? '').split(",").map((tag, i) => <Chip key={i} icon={getIconName(tag)}>{tag}</Chip>)
+                            }
                         </View>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}>
