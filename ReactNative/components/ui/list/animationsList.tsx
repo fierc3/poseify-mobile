@@ -6,6 +6,7 @@ import { EndlessList } from "./endlessList";
 import { StyleSheet, View } from "react-native";
 import useInterval from "../../../hooks/use-interval";
 import { useEstimations } from "../../../hooks/use-estimations";
+import { Snackbar } from "react-native-paper";
 
 export const AnimationsList: React.FC = () => {
     console.log("|| AnimationList")
@@ -13,6 +14,8 @@ export const AnimationsList: React.FC = () => {
     const { getEstimations, setEstimations } = useEstimations();
     const { setEstimation } = useNav();
     const [initLoaded, setInitiLoaded] = useState<boolean>(false);
+
+    const [infoMessage, setInfoMessage] = useState<string | null>(null);
 
     const updateList = async () => {
         const result = await getUserEstimations(accessToken.accessToken);
@@ -33,7 +36,18 @@ export const AnimationsList: React.FC = () => {
 
         <View style={styles.container}>
             <>
-                <EndlessList displaySpinner={!initLoaded} estimations={getEstimations() ?? []} loadData={() => updateList()} onPress={(e) => setEstimation(e)} />
+                <EndlessList displaySpinner={!initLoaded} estimations={getEstimations() ?? []} loadData={() => updateList()} open={(e) => setEstimation(e)} info={(e) => setInfoMessage(e.stateText)} />
+                <Snackbar
+                    visible={infoMessage !== null}
+                    onDismiss={() => setInfoMessage(null)}
+                    action={{
+                        label: 'hide',
+                        onPress: () => {
+                            // Do something
+                        },
+                    }}>
+                    {infoMessage}
+                </Snackbar>
             </>
         </View>
     );
