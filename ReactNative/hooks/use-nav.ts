@@ -15,15 +15,15 @@ const useNav = () => {
     }
 
     const setEstimation = (estimation: IEstimation | null) => {
-        setNav(x => ({...x, selectedEstimation: estimation}))
+        setNav(x => ({ ...x, selectedEstimation: estimation }))
     }
 
     const setCurrentPage = (page: number) => {
-        setNav(x => ({...x, currentPage: page}))
+        setNav(x => ({ ...x, currentPage: page }))
     }
 
     return { getCurrentPage, getEstimation, setEstimation, setCurrentPage };
-  };
-  
+};
 
-  export { useNav };
+
+export { useNav };

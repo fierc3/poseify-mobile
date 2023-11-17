@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { useAuthSession } from './hooks/use-auth-session';
 import Animations from './pages/animations';
+import Settings from './pages/settings';
 import Login from './pages/login';
 import { LogBox } from 'react-native';
 import { useNav } from './hooks/use-nav';
@@ -13,7 +14,7 @@ import { useEstimations } from './hooks/use-estimations';
 
 const animationsRoute = () => <Animations userName='User' />;
 const recordRoute = () => <Recording />
-const settingsRoute = () => <Text>settings</Text>
+const settingsRoute = () => <Settings/>
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -73,7 +74,7 @@ export default function App() {
 
   const [routes, setRoutes] = React.useState(routesDefault());
 
- React.useEffect(() =>{ setRoutes(routesDefault())} , [getEstimations()])
+  React.useEffect(() => { setRoutes(routesDefault()) }, [getEstimations()])
 
 
   const renderScene = BottomNavigation.SceneMap({
