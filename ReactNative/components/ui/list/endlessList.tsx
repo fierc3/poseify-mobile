@@ -35,7 +35,7 @@ const listItem = (item: IEstimation, onPress?: (estimation: IEstimation) => void
         title={item.displayName}
         descriptionStyle={{ width: '70%', paddingTop: 5 }}
         description={
-            fullTags.filter(tag => tag.length > 0).map((tag, i) => (<Text variant="labelSmall" ><Icon color="red" size={14} source={getIconName(tag)} />{tag} {fullTags.length == i + 1 ? '' : '|'}</Text>))}
+            fullTags.filter(tag => tag.length > 0).map((tag, i) => (<Text key={i} variant="labelSmall" ><Icon color="red" size={14} source={getIconName(tag)} />{tag} {fullTags.length == i + 1 ? '' : '|'}</Text>))}
         left={() =>
             (item.state === EstimationState.Failed) ? errorEntry()
                 : (item.state === EstimationState.Success ? confirmEntry() : waitingEntry())
