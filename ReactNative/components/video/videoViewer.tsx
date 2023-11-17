@@ -25,8 +25,8 @@ export const VideoViewer: React.FC<Props> = ({ path }) => {
                 shouldPlay
             />
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                <IconTextButton icon='delete' iconColor='blue' iconSize={30} onPress={() => (deleteAsync('file://'+path), setCurrentPage(0))} text='Abort' />
-                <IconTextButton icon='cloud-upload' iconColor='blue' iconSize={30} onPress={() => console.log("xxxx")} text='Upload' />
+                <IconTextButton icon='alpha-x' iconSize={30} onPress={() => (deleteAsync('file://'+path), setCurrentPage(0))} text='Abort' />
+                <IconTextButton icon='cloud-upload' iconSize={30} onPress={() => console.log("xxxx")} text='Upload' />
             </View>
         </View>
     );

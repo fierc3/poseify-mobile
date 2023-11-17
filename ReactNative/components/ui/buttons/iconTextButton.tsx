@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { View } from 'react-native';
+import { IconButton, Text } from 'react-native-paper';
 import { iconButtonProps } from './buttons.types';
 
-export const IconTextButton: React.FC<iconButtonProps> = ({ onPress, icon, iconColor, text, containerStyle, iconSize, disabled = false }) => {
+export const IconTextButton: React.FC<iconButtonProps> = ({ onPress, icon, iconColor, text, containerStyle, iconSize, disabled = false, variant = 'bodyMedium' }) => {
     return (
         <View style={containerStyle ?? { alignItems: 'center' }}>
             <IconButton
                 icon={icon ?? 'alien'} // oh no 👽
                 iconColor={iconColor}
-                size={iconSize ?? 20}
+                size={iconSize ?? 30}
                 disabled={disabled}
                 onPress={onPress} />
-            <Text style={{ color: iconColor }}>{text}</Text>
+            <Text variant={variant} style={{ color: iconColor }}>{text}</Text>
         </View>
     );
 }
