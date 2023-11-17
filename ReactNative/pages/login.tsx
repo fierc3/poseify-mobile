@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { useAuthSession } from '../hooks/use-auth-session';
 import { useAccessToken } from '../hooks/use-access-token';
+import { TextSpinner } from '../components/ui/loading/textSpinner';
 
 export type Props = {};
 
 const Login: React.FC<Props> = ({
 }) => {
     console.log("|| Login")
-    const { isLoggedIn, promptAsync, request, redirectUri, response } = useAuthSession()
-    const { retrieveAccessToken, accessToken } = useAccessToken();
+    const { promptAsync, request, redirectUri, response } = useAuthSession()
+    const { retrieveAccessToken } = useAccessToken();
+    const [loginInProgress, setLoginInProgress] = useState<Boolean>(false);
 
     useEffect(() => {
         if (response == null) {
@@ -25,14 +27,14 @@ const Login: React.FC<Props> = ({
         <View style={styles.container}>
             <Text>Login Page</Text>
 
-            {!isLoggedIn && (<Button
+            {!loginInProgress ? (<Button
 
                 title="Login with IdentityServer"
                 onPress={async () => {
-                    const res = await promptAsync();
+                    setLoginInProgress(true)
+                    await promptAsync();
                 }}
-            />)}
-            <Text>{accessToken.accessToken + ""}</Text>
+            />) : <TextSpinner label='Login in progress' />}
         </View>
     );
 };
