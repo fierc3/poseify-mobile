@@ -1,13 +1,15 @@
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { EstimationState, IEstimation } from "../../../helpers/api.types";
-import { Divider, List, Text } from "react-native-paper";
+import { Divider, Icon, List, Text } from "react-native-paper";
 import { TextSpinner } from "../loading/textSpinner";
 import moment from 'moment-timezone';
+import { getIconName } from "../../../helpers/tags";
 
 type EndlessListProps = {
     estimations: IEstimation[],
     loadData: () => any,
-    onPress?: (estimation: IEstimation) => void | undefined,
+    open?: (estimation: IEstimation) => void | undefined,
+    info?: (estimation: IEstimation) => void | undefined,
     displaySpinner: boolean
 }
 
@@ -27,10 +29,13 @@ const divider = () => <Divider leftInset={true} />
 
 const listItem = (item: IEstimation, onPress?: (estimation: IEstimation) => void | undefined) => {
     moment.tz.setDefault("Europe/Zurich");
+    const fullTags = (item.tags[0] ?? '').split(","); // this is a workaround, and a bug in the backend, I think....
 
     return <List.Item
         title={item.displayName}
-        description={item.tags.join(",")}
+        descriptionStyle={{ width: '70%', paddingTop: 5 }}
+        description={
+            fullTags.filter(tag => tag.length > 0).map((tag, i) => (<Text variant="labelSmall" ><Icon color="red" size={14} source={getIconName(tag)} />{tag} {fullTags.length == i + 1 ? '' : '|'}</Text>))}
         left={() =>
             (item.state === EstimationState.Failed) ? errorEntry()
                 : (item.state === EstimationState.Success ? confirmEntry() : waitingEntry())
@@ -43,14 +48,15 @@ const listItem = (item: IEstimation, onPress?: (estimation: IEstimation) => void
 export const EndlessList: React.FC<EndlessListProps> = ({
     estimations,
     loadData,
-    onPress,
+    open,
+    info,
     displaySpinner
 }) => {
     return (
         <FlatList
             style={{ width: '95%', marginLeft: '2.5%' }}
             data={estimations}
-            renderItem={({ item }) => listItem(item, onPress)}
+            renderItem={({ item }) => listItem(item, item.state === EstimationState.Success ? open : info)}
             keyExtractor={(_item, index) => index.toString()}
             onEndReached={loadData}
             onEndReachedThreshold={0.5}
