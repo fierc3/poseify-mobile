@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
-import { useAuthSession } from '../hooks/use-auth-session';
-import { useAccessToken } from '../hooks/use-access-token';
-import { CameraRuntimeError, PhotoFile, useCameraDevice, useCameraFormat, useFrameProcessor, VideoFile, useCameraPermission, CameraPosition } from 'react-native-vision-camera'
+import { useCameraDevice, useCameraPermission, CameraPosition } from 'react-native-vision-camera'
 import { Camera } from 'react-native-vision-camera'
 import { useNav } from '../hooks/use-nav';
 import { IconButton, MD3Colors, Text } from 'react-native-paper';
@@ -14,6 +12,7 @@ export type Props = {};
 const Recording: React.FC<Props> = ({
 }) => {
     const { hasPermission, requestPermission } = useCameraPermission()
+    const [permissionChecked, setPermissionChecked] = useState<boolean>(false);
     const { setCurrentPage } = useNav();
     const [cameraLoaded, setCameraLoaded] = useState(false);
     const [isCameraRecording, setIsCameraRecording] = useState(false);
@@ -58,6 +57,8 @@ const Recording: React.FC<Props> = ({
         setIsActive(false);
     };
 
+    setTimeout(() => setPermissionChecked(true), 1000) // we actually don't have a fixed time when we know that it has been checked
+
 
     // Function to toggle the camera
     const toggleCameraType = () => {
@@ -73,7 +74,7 @@ const Recording: React.FC<Props> = ({
                     {hasPermission ? <>
                         <Camera
                             ref={camera}
-                            style={StyleSheet.absoluteFill}
+                            style={StyleSheet.absoluteFillObject}
                             device={device}
                             isActive={true}
                             onInitialized={() => setCameraLoaded(true)}
@@ -122,10 +123,10 @@ const Recording: React.FC<Props> = ({
                                     iconSize={50} />
                             </>
                         )}
-                    </> : <>
+                    </> : <View style={{display: permissionChecked ? 'flex' : 'none'}}>
                         <Text>To be able to record, camera access needs to be enabled</Text>
                         <Button title='Click to request permission' onPress={() => requestPermission()} />
-                    </>}
+                    </View>}
                 </View>
             )}
         </>
