@@ -67,7 +67,7 @@ export default function App() {
   };
 
   const routesDefault = () => [
-    { key: 'animation', title: 'Animations', focusedIcon: 'animation-play', unfocusedIcon: 'animation-play-outline', badge: getEstimations().length },
+    { key: 'animation', title: 'Animations', focusedIcon: 'animation-play', unfocusedIcon: 'animation-play-outline', badge: (getEstimations() ?? []).length },
     { key: 'record', title: 'Record', focusedIcon: 'record-circle-outline' },
     { key: 'settings', title: 'Settings', focusedIcon: 'cog' }
   ]

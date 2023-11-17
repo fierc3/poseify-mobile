@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAccessToken } from "../../../hooks/use-access-token";
 import { useNav } from "../../../hooks/use-nav";
-import { IEstimation } from "../../../helpers/api.types";
 import { getUserEstimations } from "../../../helpers/api";
 import { EndlessList } from "./endlessList";
 import { StyleSheet, View } from "react-native";
@@ -34,7 +33,7 @@ export const AnimationsList: React.FC = () => {
 
         <View style={styles.container}>
             <>
-                <EndlessList displaySpinner={!initLoaded} estimations={getEstimations()} loadData={() => updateList()} onPress={(e) => setEstimation(e)} />
+                <EndlessList displaySpinner={!initLoaded} estimations={getEstimations() ?? []} loadData={() => updateList()} onPress={(e) => setEstimation(e)} />
             </>
         </View>
     );

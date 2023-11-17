@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 
 
 type Props = {
     label: string
+    styleContainer?: StyleProp<ViewStyle>
 }
 
-export const TextSpinner: React.FC<Props> = ({ label }) => {
+export const TextSpinner: React.FC<Props> = ({ label, styleContainer }) => {
     return (
-        <View style={styles.loadingContainer}>
+        <View style={[styles.loadingContainer, styleContainer]}>
             <ActivityIndicator size="large" />
             <Text variant='labelSmall' style={styles.label}>{label}</Text>
         </View>
