@@ -12,9 +12,17 @@ import Recording from './pages/recording';
 import { useEstimations } from './hooks/use-estimations';
 
 
+
+// avoids the viewer to be rerendered, only when the selected estimation has changed
+const MemoizedSettings = React.memo(() => {
+  return (<Settings />)
+})
+
+
+
 const animationsRoute = () => <Animations userName='User' />;
 const recordRoute = () => <Recording />
-const settingsRoute = () => <Settings/>
+const settingsRoute = () => <MemoizedSettings/>
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
