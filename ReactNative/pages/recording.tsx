@@ -36,7 +36,7 @@ const Recording: React.FC<Props> = ({
         }
 
         // When countdown reaches 0, stop the timer
-        if (countdown === 0) {
+        if (countdown <= 0) {
             if (isActive) {
                 camera.current?.stopRecording();
             }
