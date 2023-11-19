@@ -1,5 +1,4 @@
 import { IEstimation } from './../helpers/api.types';
-import * as AuthSession from 'expo-auth-session';
 import { useAtom } from 'jotai';
 import { navAtom } from '../store/navstore';
 
