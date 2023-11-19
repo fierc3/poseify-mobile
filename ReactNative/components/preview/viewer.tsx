@@ -84,7 +84,7 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
                     <View style={{ flexGrow: 0.5, justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}>
                         <View style={{ flexGrow: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: '100%', gap: 4 }}>
                             {   // workaround for tags bug
-                                (estimation?.tags[0] ?? '').split(",").map((tag, i) => <Chip key={i} icon={getIconName(tag)}>{tag}</Chip>)
+                                (estimation?.tags[0] ?? '').split(",").filter(tag => tag.length > 0).map((tag, i) => <Chip key={i} icon={getIconName(tag)}>{tag}</Chip>)
                             }
                         </View>
 
