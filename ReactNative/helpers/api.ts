@@ -3,6 +3,7 @@ import { IEstimation, AttachmentType } from './api.types';
 import * as FileSystem from 'expo-file-system';
 
 const apiCall = async (url: string, token: string) => {
+  console.log("API: " + url);
   try {
     const response = await axios.get(url, {
       headers: {

@@ -13,7 +13,7 @@ export const AnimationsList: React.FC = () => {
     console.log("|| AnimationList")
     const { accessToken } = useAccessToken();
     const { getEstimations, setEstimations } = useEstimations();
-    const { setEstimation } = useNav();
+    const { setEstimation, getEstimation } = useNav();
     const [initLoaded, setInitiLoaded] = useState<boolean>(false);
 
     const [infoMessage, setInfoMessage] = useState<string | null>(null);
@@ -23,10 +23,22 @@ export const AnimationsList: React.FC = () => {
         setEstimations(result);
     }
 
-    const refreshTimer = 10000;
-    useInterval(() => (updateList(), console.log(`Updated after ${refreshTimer}`)), 10000)
+    const refreshTimer = 30000;
+    useInterval(() => {
+
+        if(getEstimation() !== null){
+            // If youre focused on an estimation, we don't want to update the animation list.
+            // We want to avoid rerenders while in the animation viewer.
+            return;
+        }
+
+        updateList()
+        console.log(`Updated after ${refreshTimer}`)
+    }, refreshTimer)
 
     useEffect(() => {
+        console.log('Reloading due to access token or nav')
+
         updateList();
         if (!initLoaded) {
             setInitiLoaded(true);
