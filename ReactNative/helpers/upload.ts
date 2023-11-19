@@ -14,8 +14,8 @@ export const uploadFile = async (token: string, fileUri: string, estimationName:
         // Append the file for uploading
         formData.append("FormFile", {
             uri: fileInfo.uri,
-            type: 'image/jpeg', // or the correct file type
-            name: 'photo.jpg', // or the correct file name
+            type: 'video/mp4',
+            name: 'upload.mp4', // filename is overwritten, file extension is the only thing that matters
         });
 
         formData.append("EstimationName", estimationName);
