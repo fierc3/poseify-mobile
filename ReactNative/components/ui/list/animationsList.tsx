@@ -7,6 +7,7 @@ import { StyleSheet, View } from "react-native";
 import useInterval from "../../../hooks/use-interval";
 import { useEstimations } from "../../../hooks/use-estimations";
 import { Snackbar } from "react-native-paper";
+import { EstimationState, IEstimation } from "../../../helpers/api.types";
 
 export const AnimationsList: React.FC = () => {
     console.log("|| AnimationList")
@@ -32,11 +33,22 @@ export const AnimationsList: React.FC = () => {
         }
     }, [accessToken.accessToken])
 
+    const buildInfoMessage = (estimation: IEstimation) => {
+        if (estimation.state === EstimationState.Processing) {
+            return 'Is being processed. ⚙️\n' + estimation.stateText;
+        } else if (estimation.state === EstimationState.Queued) {
+            return 'Is currently in the Queue.  🕥\n' + estimation.stateText;
+        } else if (estimation.state === EstimationState.Failed) {
+            return 'Sadly failed... 😔\n' + estimation.stateText;
+        }
+        return null;
+    }
+
     return (
 
         <View style={styles.container}>
             <>
-                <EndlessList displaySpinner={!initLoaded} estimations={getEstimations() ?? []} loadData={() => updateList()} open={(e) => setEstimation(e)} info={(e) => setInfoMessage(e.stateText)} />
+                <EndlessList displaySpinner={!initLoaded} estimations={getEstimations() ?? []} loadData={() => updateList()} open={(e) => setEstimation(e)} info={(e) => setInfoMessage(buildInfoMessage(e))} />
                 <Snackbar
                     visible={infoMessage !== null}
                     onDismiss={() => setInfoMessage(null)}
