@@ -32,7 +32,8 @@
     "react-native-safe-area-context": "4.6.3",
     "react-native-vector-icons": "^10.0.2",
     "react-native-vision-camera": "^3.6.4",
-    "three": "^0.158.0"
+    "three": "^0.158.0",
+    "expo-mail-composer": "~12.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
