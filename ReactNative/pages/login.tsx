@@ -12,6 +12,19 @@ const Login: React.FC<Props> = ({
     const { promptAsync, request, redirectUri, response } = useAuthSession()
     const { retrieveAccessToken } = useAccessToken();
     const [loginInProgress, setLoginInProgress] = useState<Boolean>(false);
+    const [devMessage, setDevMessage] = useState<string>("");
+    const { isServerUp } = useServerCheck();
+
+    useEffect(() => {
+        console.log("Getting dev message")
+        const fetchData = async () => {
+            const response = await axios.get('https://amaruq.ch/wp-content/uploads/devmessage.txt');
+            setDevMessage(response.data)
+        }
+
+        fetchData();
+    }, [])
+
 
     useEffect(() => {
         if (response == null) {
