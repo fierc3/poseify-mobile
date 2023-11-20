@@ -41,3 +41,5 @@ export interface IUserProfile {
     token: string,
     imageurl: string
 }
+
+export type ServerStatus = 'Unknown' | 'Offline' | 'Online'
