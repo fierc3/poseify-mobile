@@ -58,8 +58,6 @@ export const EndlessList: React.FC<EndlessListProps> = ({
             data={estimations}
             renderItem={({ item }) => listItem(item, item.state === EstimationState.Success ? open : info)}
             keyExtractor={(_item, index) => index.toString()}
-            onEndReached={loadData}
-            onEndReachedThreshold={0.5}
             ListFooterComponent={() => displaySpinner ? <TextSpinner label='Getting your animations!' /> : null}
             ItemSeparatorComponent={divider}
         />
