@@ -10,6 +10,8 @@ import { Viewer } from './components/preview/viewer';
 import { MD3LightTheme as DefaultTheme, PaperProvider, BottomNavigation, Text } from 'react-native-paper';
 import Recording from './pages/recording';
 import { useEstimations } from './hooks/use-estimations';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 
 
 
@@ -22,7 +24,7 @@ const MemoizedSettings = React.memo(() => {
 
 const animationsRoute = () => <Animations userName='User' />;
 const recordRoute = () => <Recording />
-const settingsRoute = () => <MemoizedSettings/>
+const settingsRoute = () => <MemoizedSettings />
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -93,36 +95,39 @@ export default function App() {
 
   let index = getCurrentPage();
   const isRecording = getCurrentPage() === 1;
+  StatusBar.setBarStyle('dark-content', true);
 
   return (
-    <ErrorBoundary>
-      <PaperProvider theme={theme}>
-        {
-          isRecording &&
-          <Recording />
-        }
+    <SafeAreaView style={{ flex: 1 }}>
+      <ErrorBoundary>
+        <PaperProvider theme={theme}>
+          {
+            isRecording &&
+            <Recording />
+          }
 
-        {
-          !isRecording &&
-          <>
-            {isLoggedIn ? <>
+          {
+            !isRecording &&
+            <>
+              {isLoggedIn ? <>
 
-              <BottomNavigation
-                style={{ display: getEstimation() === null ? 'flex' : 'none' }}
-                navigationState={{ index, routes }} // is marked as deperecated but docs doesn't show another solution 🤷
-                onIndexChange={setCurrentPage}
-                renderScene={renderScene}
-              />
+                <BottomNavigation
+                  style={{ display: getEstimation() === null ? 'flex' : 'none' }}
+                  navigationState={{ index, routes }} // is marked as deperecated but docs doesn't show another solution 🤷
+                  onIndexChange={setCurrentPage}
+                  renderScene={renderScene}
+                />
 
-            </> : <>
-              <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
-                <Login />
-              </View>
-            </>}
-            <MemoizedViewer estimation={getEstimation()} />
-          </>
-        }
-      </PaperProvider>
-    </ErrorBoundary>
+              </> : <>
+                <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
+                  <Login />
+                </View>
+              </>}
+              <MemoizedViewer estimation={getEstimation()} />
+            </>
+          }
+        </PaperProvider>
+      </ErrorBoundary>
+    </SafeAreaView>
   );
 }
