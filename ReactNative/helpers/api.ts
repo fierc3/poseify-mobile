@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { IEstimation, AttachmentType } from './api.types';
 import * as FileSystem from 'expo-file-system';
 
@@ -70,5 +70,18 @@ const getBvh = async (estimation: IEstimation, token: string): Promise<string> =
   //console.log("response", response)
   return response;
 }
+const deleteAnimation = async (token: string, animationGuid: string): Promise<AxiosResponse> => {
+  console.log(token)
+  console.log(animationGuid)
+  return axios.delete(`https://poseify.ngrok.app/api/DeleteEstimation?estimationId=${animationGuid}`,
+    {
+      headers:
+      {
+        Authorization: `Bearer ${token}`, 
+        'X-CSRF': '1'
+      }
+    })
+}
 
-export { getUserEstimations, getUser, getBvh, downloadAndStoreAttachment }
+
+export { getUserEstimations, getUser, getBvh, downloadAndStoreAttachment, deleteAnimation }
