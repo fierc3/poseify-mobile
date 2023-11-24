@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
-import { IEstimation, AttachmentType } from './api.types';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { IEstimation, AttachmentType, ServerStatus } from './api.types';
 import * as FileSystem from 'expo-file-system';
 
 const apiCall = async (url: string, token: string) => {
@@ -77,11 +77,21 @@ const deleteAnimation = async (token: string, animationGuid: string): Promise<Ax
     {
       headers:
       {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
         'X-CSRF': '1'
       }
     })
 }
 
+const isServerUp = async (): Promise<ServerStatus> => {
+  try {
+    await axios.get(`https://poseify.ngrok.app/bff/user`);
+  } catch (error) {
+    const axiosError = error as AxiosError
+    return axiosError.response?.status === 401 ? 'Online' : 'Offline'
+  }
+  return 'Online';
+}
 
-export { getUserEstimations, getUser, getBvh, downloadAndStoreAttachment, deleteAnimation }
+
+export { getUserEstimations, getUser, getBvh, downloadAndStoreAttachment, deleteAnimation, isServerUp }
