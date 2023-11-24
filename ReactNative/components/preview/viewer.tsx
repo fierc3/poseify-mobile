@@ -46,12 +46,12 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
     useInterval(() => {
         if (customRotation) return;
 
-        yawAngle += 0.02; // adjust this value to change the rotation speed
+        yawAngle += 0.02;
 
         camera.position.x = radius * Math.cos(yawAngle);
         camera.position.z = radius * Math.sin(yawAngle);
 
-        camera.lookAt(0, 1, 0); // assuming you want to look at the origin
+        camera.lookAt(0, 1, 0); // Look at the center and ca. human height
     }, 30)
 
 
@@ -89,7 +89,7 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
         camera.position.x = radius * Math.sin(yawAngle) * Math.cos(pitchAngle);
         camera.position.y = radius * Math.sin(pitchAngle);
         camera.position.z = radius * Math.cos(yawAngle) * Math.cos(pitchAngle);
-        camera.lookAt(new THREE.Vector3(0, 1, 0)); // Assuming you want to look at the origin
+        camera.lookAt(new THREE.Vector3(0, 1, 0)); // Look at the center and ca. human height
     };
 
     useEffect(() => {
