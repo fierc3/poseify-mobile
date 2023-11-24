@@ -6,10 +6,11 @@ export const useServerCheck = () => {
 
     const [isServerUp, setIsServerUp] = useState<ServerStatus>('Unknown');
 
+    const check = async () => setIsServerUp(await isServerUpApi());
+
     useEffect(() => {
-        const check = async () => setIsServerUp(await isServerUpApi());
         check()
     }, [])
 
-    return { isServerUp }
+    return { isServerUp, checkServer: check }
 }

@@ -10,6 +10,7 @@ import { useServerCheck } from '../hooks/use-server-check';
 import { Video, ResizeMode } from 'expo-av';
 import introVideo from '../assets/intro.mp4'
 import { BlurView } from 'expo-blur';
+import useInterval from '../hooks/use-interval';
 
 
 
@@ -22,7 +23,10 @@ const Login: React.FC<Props> = ({
     const { retrieveAccessToken } = useAccessToken();
     const [loginInProgress, setLoginInProgress] = useState<Boolean>(false);
     const [devMessage, setDevMessage] = useState<string>("");
-    const { isServerUp } = useServerCheck();
+    const { isServerUp, checkServer } = useServerCheck();
+
+    // check if server is online every few seconds
+    useInterval(checkServer, 10000);
 
     useEffect(() => {
         console.log("Getting dev message")
@@ -77,6 +81,7 @@ const Login: React.FC<Props> = ({
                 resizeMode={ResizeMode.COVER}
                 isLooping
                 shouldPlay
+                isMuted
             />
             <Image source={logo}
                 style={{ left: 0, right: 0, flexShrink: 1, maxWidth: '90%' }}
@@ -94,13 +99,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 40,
-        width: '100%'
+        width: '100%',
+        backgroundColor: 'white'
     },
     video: {
         position: 'absolute',
         height: '100%', // You can adjust this value
         width: '100%',
-        backgroundColor: 'red',
+        backgroundColor: 'white',
         top: 0,
         left: 0,
         zIndex: -1
