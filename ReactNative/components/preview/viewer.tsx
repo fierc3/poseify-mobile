@@ -8,11 +8,12 @@ import { deleteAnimation, getBvh } from '../../helpers/api';
 import { useAccessToken } from '../../hooks/use-access-token';
 import { useNav } from '../../hooks/use-nav';
 import { ShareFileButton } from '../ui/buttons/shareFileButton';
-import { Appbar, Chip } from 'react-native-paper';
+import { Appbar, Button, Chip, Text } from 'react-native-paper';
 import { TextSpinner } from '../ui/loading/textSpinner';
 import { getIconName } from '../../helpers/tags';
 import { ConfirmApiDialog } from '../ui/confirm/confirmApiDialog';
 import React from 'react';
+import useInterval from '../../hooks/use-interval';
 
 
 const MemoizedConfirmDialog = React.memo(ConfirmApiDialog);
@@ -30,27 +31,81 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
     const { setEstimation } = useNav();
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [deleteVisible, setDeleteVisible] = useState<boolean>(false);
+    const [customRotation, setCustomRotation] = useState<boolean>(false);
 
     const camera = new THREE.PerspectiveCamera(80)
     camera.position.set(1, 2, 4)
 
-    let angle = 0;
-    const radius = camera.position.length(); // assuming the camera is already some distance away from the center
-    const interval = setInterval(() => {
-        angle += 0.02; // adjust this value to change the rotation speed
+    let lastX = 0;
+    let lastY = 0;
 
-        camera.position.x = radius * Math.cos(angle);
-        camera.position.z = radius * Math.sin(angle);
+    let yawAngle = 0;
+    let pitchAngle = 0;
+    let radius = 5; // Distance of the camera from the center
 
-        camera.lookAt(0, 0, 0); // assuming you want to look at the origin
-    }, 30);
+    useInterval(() => {
+        if (customRotation) return;
+
+        yawAngle += 0.02; // adjust this value to change the rotation speed
+
+        camera.position.x = radius * Math.cos(yawAngle);
+        camera.position.z = radius * Math.sin(yawAngle);
+
+        camera.lookAt(0, 1, 0); // assuming you want to look at the origin
+    }, 30)
+
+
+    const onMove = (event: React.TouchEvent<HTMLDivElement>) => {
+        const { pageX, pageY, touches } = event.nativeEvent as { pageX: number, pageY: number, touches: [] };
+
+        if (lastX === 0) {
+            lastX = pageX
+        }
+
+        if (lastY === 0) {
+            lastY = pageY
+        }
+
+        if (!event.nativeEvent || touches.length > 1 || touches.length === 0) return;
+
+        setCustomRotation(true);
+
+        let deltaX = 0;
+        let deltaY = 0;
+
+        deltaX = pageX - lastX;
+        deltaY = pageY - lastY;
+
+        lastX = pageX;
+        lastY = pageY;
+
+        yawAngle += deltaX * 0.01;
+        pitchAngle = Math.max(Math.min(pitchAngle + deltaY * 0.01, Math.PI / 2), -Math.PI / 2);
+
+        updateCameraPosition();
+    };
+
+    const updateCameraPosition = () => {
+        camera.position.x = radius * Math.sin(yawAngle) * Math.cos(pitchAngle);
+        camera.position.y = radius * Math.sin(pitchAngle);
+        camera.position.z = radius * Math.cos(yawAngle) * Math.cos(pitchAngle);
+        camera.lookAt(new THREE.Vector3(0, 1, 0)); // Assuming you want to look at the origin
+    };
 
     useEffect(() => {
         if (estimation === null) return;
-        clearInterval(interval);
+        setCustomRotation(false);
         const fetchData = async () => setBvhData(await getBvh(estimation, accessToken.accessToken));
         fetchData();
     }, [estimation])
+
+    const zoom = (zoomChange: number) => {
+        radius += zoomChange
+
+        if (customRotation) {
+            updateCameraPosition();
+        }
+    }
 
     return (
         <>
@@ -76,6 +131,12 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
 
             <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center', display: estimation === null || bvhData === null ? 'none' : 'flex' }}>
                 <Canvas
+                    onTouchMove={onMove}
+                    onTouchStart={e => {
+                        const nativeEvent = e.nativeEvent as { pageX: number, pageY: number }
+                        lastX = nativeEvent.pageX;
+                        lastY = nativeEvent.pageY;
+                    }}
                     camera={camera}
                     gl={{ antialias: true }}
                     onCreated={(state) => {
@@ -92,13 +153,16 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
                         setIsLoaded(true);
                     }
                     }
-                    style={{ width: "100%", maxHeight: "50%", height: "50%", display: estimation === null || bvhData === null ? 'none' : 'flex', zIndex: -1 }}>
+                    style={{ width: "100%", maxHeight: "50%", height: "50%", display: estimation === null || bvhData === null ? 'none' : 'flex', zIndex: -10 }}>
                     <ambientLight />
                     <pointLight position={[10, 10, 10]} />
                     <Model bvhData={bvhData} />
                 </Canvas>
+                <Button style={{ position: 'absolute', right: 0, top: '40%' }} labelStyle={{ fontSize: 20 }} onPress={() => zoom(-0.4)}>+</Button>
+                <Button style={{ position: 'absolute', right: 0, top: '45%' }} labelStyle={{ fontSize: 20 }} onPress={() => zoom(+0.4)}>-</Button>
+                {!customRotation && (<Text style={{ position: 'absolute', top: '4%', opacity: 0.3 }} variant='titleMedium'>- Swipe to Rotate -</Text>)}
                 {estimation && isLoaded && (
-                    <View style={{ flexGrow: 0.5, justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}>
+                    <View style={{ flexGrow: 0.5, justifyContent: 'space-evenly', alignItems: 'center', width: '100%', marginBottom: 10 }}>
                         <View style={{ flexGrow: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: '100%', gap: 4, zIndex: -1 }}>
                             {   // workaround for tags bug
                                 (estimation?.tags[0] ?? '').split(",").filter(tag => tag.length > 0).map((tag, i) => <Chip key={i} icon={getIconName(tag)}>{tag}</Chip>)
@@ -112,7 +176,7 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
 
                     </View>
                 )}
-            </View>
+            </View >
         </>
     )
 }
