@@ -3,7 +3,6 @@ import { Image, StyleSheet, View } from 'react-native';
 import { useAuthSession } from '../hooks/use-auth-session';
 import { useAccessToken } from '../hooks/use-access-token';
 import { TextSpinner } from '../components/ui/loading/textSpinner';
-import axios from 'axios';
 import { Button, Text } from 'react-native-paper';
 import logo from '../assets/logo.png';
 import { useServerCheck } from '../hooks/use-server-check';
@@ -11,6 +10,7 @@ import { Video, ResizeMode } from 'expo-av';
 import introVideo from '../assets/intro.mp4'
 import { BlurView } from 'expo-blur';
 import useInterval from '../hooks/use-interval';
+import { useRemoteConfig } from '../hooks/use-remote-config';
 
 
 
@@ -22,21 +22,11 @@ const Login: React.FC<Props> = ({
     const { promptAsync, request, redirectUri, response } = useAuthSession()
     const { retrieveAccessToken } = useAccessToken();
     const [loginInProgress, setLoginInProgress] = useState<Boolean>(false);
-    const [devMessage, setDevMessage] = useState<string>("");
     const { isServerUp, checkServer } = useServerCheck();
+    const { getDevMessage } = useRemoteConfig()
 
     // check if server is online every few seconds
     useInterval(checkServer, 10000);
-
-    useEffect(() => {
-        console.log("Getting dev message")
-        const fetchData = async () => {
-            const response = await axios.get('https://amaruq.ch/wp-content/uploads/devmessage.txt');
-            setDevMessage(response.data)
-        }
-
-        fetchData();
-    }, [])
 
 
     useEffect(() => {
@@ -86,7 +76,7 @@ const Login: React.FC<Props> = ({
             <Image source={logo}
                 style={{ left: 0, right: 0, flexShrink: 1, maxWidth: '90%' }}
                 resizeMode="contain" />
-            <Text variant='labelLarge'>{devMessage}</Text>
+            <Text variant='labelLarge'>{getDevMessage()}</Text>
 
             {!loginInProgress ? (<Login />) : <TextSpinner label='Login in progress' />}
         </View>

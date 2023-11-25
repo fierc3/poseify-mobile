@@ -1,7 +1,7 @@
 import * as AuthSession from 'expo-auth-session';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
-import { authAtom } from '../store/authstore';
+import { authAtom } from '../atoms/authAtom';
 
 const useAuthSession = () => {
     const redirectUri = AuthSession.makeRedirectUri();

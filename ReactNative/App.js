@@ -4,51 +4,23 @@ import { useAuthSession } from './hooks/use-auth-session';
 import Animations from './pages/animations';
 import Settings from './pages/settings';
 import Login from './pages/login';
-import { LogBox } from 'react-native';
 import { useNav } from './hooks/use-nav';
 import { Viewer } from './components/preview/viewer';
-import { MD3LightTheme as DefaultTheme, PaperProvider, BottomNavigation, Text } from 'react-native-paper';
+import { MD3LightTheme as DefaultTheme, PaperProvider, BottomNavigation } from 'react-native-paper';
 import Recording from './pages/recording';
 import { useEstimations } from './hooks/use-estimations';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'react-native';
-
-
+import { useLogSuppression } from './hooks/use-log-suppression';
 
 // avoids the viewer to be rerendered, only when the selected estimation has changed
 const MemoizedSettings = React.memo(() => {
   return (<Settings />)
 })
 
-
-
 const animationsRoute = () => <Animations userName='User' />;
 const recordRoute = () => <Recording />
 const settingsRoute = () => <MemoizedSettings />
-
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // You can log the error to an error reporting service
-  }
-
-  render() {
-    if (this.state.hasError) {
-      // You can render any fallback UI
-      return <Text>Something went wrong.</Text>;
-    }
-
-    return this.props.children;
-  }
-}
 
 // avoids the viewer to be rerendered, only when the selected estimation has changed
 const MemoizedViewer = React.memo(({ estimation }) => {
@@ -60,12 +32,7 @@ export default function App() {
   const { isLoggedIn } = useAuthSession();
   const { getEstimations } = useEstimations();
   const { getEstimation, getCurrentPage, setCurrentPage } = useNav();
-
-  // Generally a lot of issues with ThreeJs and expo apparently (recent issues: https://github.com/pmndrs/react-three-fiber/discussions/2823)
-  // Thus we ignore some logs
-  LogBox.ignoreLogs(['Cannot read property \'getX\' of undefined', // this error happens always, not clean but we ignore it so that expo doesn't show a popup
-    'Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+' // can't fix this, issue is open
-  ]);
+  useLogSuppression();
 
   const theme = {
     ...DefaultTheme,
@@ -99,13 +66,11 @@ export default function App() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ErrorBoundary>
         <PaperProvider theme={theme}>
           {
             isRecording &&
             <Recording />
           }
-
           {
             !isRecording &&
             <>
@@ -127,7 +92,6 @@ export default function App() {
             </>
           }
         </PaperProvider>
-      </ErrorBoundary>
     </SafeAreaView>
   );
 }

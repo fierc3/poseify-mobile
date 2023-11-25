@@ -1,11 +1,10 @@
-// @src/store.js
 import { atom } from "jotai";
 import { IEstimation } from "../helpers/api.types";
 
-interface IEstimationStore {
+interface IEstimationAtom {
     estimations: IEstimation[] | null
 }
 
-export const estimationStore = atom<IEstimationStore>({
+export const estimationAtom = atom<IEstimationAtom>({
   estimations: null
 });

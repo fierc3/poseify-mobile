@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
 import { EstimationState, IEstimation } from "../../../helpers/api.types";
 import { Divider, Icon, List, Text } from "react-native-paper";
 import { TextSpinner } from "../loading/textSpinner";
@@ -21,8 +21,12 @@ const confirmEntry = () => {
     return <List.Icon icon="check" color="#36978D" />
 }
 
-const waitingEntry = () => {
+const queuedEntry = () => {
     return <List.Icon icon="clock-outline" color="#6E47D5" />
+}
+
+const processingEntry = () => {
+    return <List.Icon icon="progress-wrench" color="#6E47D5" />
 }
 
 const divider = () => <Divider leftInset={true} />
@@ -38,7 +42,10 @@ const listItem = (item: IEstimation, onPress?: (estimation: IEstimation) => void
             fullTags.filter(tag => tag.length > 0).map((tag, i) => (<Text key={i} variant="labelSmall" ><Icon color="red" size={14} source={getIconName(tag)} />{tag} {fullTags.length == i + 1 ? '' : '|'}</Text>))}
         left={() =>
             (item.state === EstimationState.Failed) ? errorEntry()
-                : (item.state === EstimationState.Success ? confirmEntry() : waitingEntry())
+                : (item.state === EstimationState.Success ? confirmEntry()
+                    : (item.state === EstimationState.Processing ? processingEntry()
+                        : queuedEntry())
+                )
         }
         right={() => <Text variant="labelSmall">{moment(item.modifiedDate).fromNow()}</Text>}
         style={{ minHeight: 100 }}
@@ -47,7 +54,6 @@ const listItem = (item: IEstimation, onPress?: (estimation: IEstimation) => void
 
 export const EndlessList: React.FC<EndlessListProps> = ({
     estimations,
-    loadData,
     open,
     info,
     displaySpinner
