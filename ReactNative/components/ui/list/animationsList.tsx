@@ -24,6 +24,9 @@ export const AnimationsList: React.FC = () => {
     const [snackbarVisible, setSnackbarVisible] = useState<boolean>(false);
 
     const updateList = async () => {
+        if (!initLoaded) {
+            setInitiLoaded(true);
+        }
         const result = await getUserEstimations(accessToken.accessToken);
 
         if (!arraysAreEqual(result, getEstimations() ?? [])) {
@@ -44,20 +47,25 @@ export const AnimationsList: React.FC = () => {
         console.log(`Updated after ${refreshTimer}`)
     }, refreshTimer)
 
+
     useEffect(() => {
         console.log('Reloading due to access token or nav')
-
         updateList();
-        if (!initLoaded) {
-            setInitiLoaded(true);
-        }
     }, [accessToken.accessToken])
+
+    useEffect(() => {
+        if (getEstimation() === null) {
+            console.log('Reloading due to estimation change')
+            updateList();
+        }
+    }, [getEstimation()])
+
 
     const buildInfoMessage = (estimation: IEstimation) => {
         if (estimation.state === EstimationState.Processing) {
-            return 'Is being processed. ⚙️\n' + estimation.stateText;
+            return 'Is being processed.\n' + estimation.stateText;
         } else if (estimation.state === EstimationState.Queued) {
-            return 'Is currently in the Queue.  🕥\n' + estimation.stateText;
+            return 'Is currently in the Queue. \n' + estimation.stateText;
         } else if (estimation.state === EstimationState.Failed) {
             return 'Sadly failed... 😔\n' + estimation.stateText;
         }
