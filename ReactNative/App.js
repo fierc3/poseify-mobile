@@ -4,7 +4,6 @@ import { useAuthSession } from './hooks/use-auth-session';
 import Animations from './pages/animations';
 import Settings from './pages/settings';
 import Login from './pages/login';
-import { LogBox } from 'react-native';
 import { useNav } from './hooks/use-nav';
 import { Viewer } from './components/preview/viewer';
 import { MD3LightTheme as DefaultTheme, PaperProvider, BottomNavigation } from 'react-native-paper';
@@ -12,6 +11,7 @@ import Recording from './pages/recording';
 import { useEstimations } from './hooks/use-estimations';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'react-native';
+import { useLogSuppression } from './hooks/use-log-suppression';
 
 // avoids the viewer to be rerendered, only when the selected estimation has changed
 const MemoizedSettings = React.memo(() => {
@@ -32,6 +32,7 @@ export default function App() {
   const { isLoggedIn } = useAuthSession();
   const { getEstimations } = useEstimations();
   const { getEstimation, getCurrentPage, setCurrentPage } = useNav();
+  useLogSuppression();
 
   const theme = {
     ...DefaultTheme,
