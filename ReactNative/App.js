@@ -7,48 +7,20 @@ import Login from './pages/login';
 import { LogBox } from 'react-native';
 import { useNav } from './hooks/use-nav';
 import { Viewer } from './components/preview/viewer';
-import { MD3LightTheme as DefaultTheme, PaperProvider, BottomNavigation, Text } from 'react-native-paper';
+import { MD3LightTheme as DefaultTheme, PaperProvider, BottomNavigation } from 'react-native-paper';
 import Recording from './pages/recording';
 import { useEstimations } from './hooks/use-estimations';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'react-native';
-
-
 
 // avoids the viewer to be rerendered, only when the selected estimation has changed
 const MemoizedSettings = React.memo(() => {
   return (<Settings />)
 })
 
-
-
 const animationsRoute = () => <Animations userName='User' />;
 const recordRoute = () => <Recording />
 const settingsRoute = () => <MemoizedSettings />
-
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // You can log the error to an error reporting service
-  }
-
-  render() {
-    if (this.state.hasError) {
-      // You can render any fallback UI
-      return <Text>Something went wrong.</Text>;
-    }
-
-    return this.props.children;
-  }
-}
 
 // avoids the viewer to be rerendered, only when the selected estimation has changed
 const MemoizedViewer = React.memo(({ estimation }) => {
@@ -99,13 +71,11 @@ export default function App() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ErrorBoundary>
         <PaperProvider theme={theme}>
           {
             isRecording &&
             <Recording />
           }
-
           {
             !isRecording &&
             <>
@@ -127,7 +97,6 @@ export default function App() {
             </>
           }
         </PaperProvider>
-      </ErrorBoundary>
     </SafeAreaView>
   );
 }
