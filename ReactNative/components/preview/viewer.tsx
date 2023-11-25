@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { Model } from './model';
 import { AttachmentType, IEstimation } from '../../helpers/api.types';
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Animated, View } from 'react-native';
 import { deleteAnimation, getBvh } from '../../helpers/api';
 import { useAccessToken } from '../../hooks/use-access-token';
 import { useNav } from '../../hooks/use-nav';
@@ -107,11 +107,30 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
         }
     }
 
+    const [fadeAnim] = useState(new Animated.Value(0));
+
+    const fadeIn = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 1, // Target opacity value
+            duration: 1000, // Duration of the animation in milliseconds
+            useNativeDriver: true, // Add this to use native driver for better performance
+        }).start();
+    };
+
+    const fadeOut = (onFadeOut: () => any) => {
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+        }).start(onFadeOut);
+    };
+
+
     return (
         <>
             {estimation && (<>
                 <Appbar.Header>
-                    <Appbar.BackAction onPress={() => (setEstimation(null), setBvhData(null), setIsLoaded(false))} />
+                    <Appbar.BackAction onPress={() => fadeOut(() => { setEstimation(null); setBvhData(null); setIsLoaded(false); })} />
                     <Appbar.Content title={estimation.displayName} />
                     <Appbar.Action icon={'delete'} onPress={() => setDeleteVisible(true)} />
                 </Appbar.Header>
@@ -129,7 +148,13 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
             </>
             )}
 
-            <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center', display: estimation === null || bvhData === null ? 'none' : 'flex' }}>
+            <Animated.View style={{
+                flex: 1,
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+                display: estimation === null || bvhData === null ? 'none' : 'flex',
+                opacity: fadeAnim // Bind opacity to animated value 
+            }}>
                 <Canvas
                     onTouchMove={onMove}
                     onTouchStart={e => {
@@ -151,6 +176,7 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
                         }
 
                         setIsLoaded(true);
+                        fadeIn();
                     }
                     }
                     style={{ width: "100%", maxHeight: "50%", height: "50%", display: estimation === null || bvhData === null ? 'none' : 'flex', zIndex: -10 }}>
@@ -176,7 +202,7 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
 
                     </View>
                 )}
-            </View >
+            </Animated.View >
         </>
     )
 }
