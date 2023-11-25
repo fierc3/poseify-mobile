@@ -1,16 +1,16 @@
 import { IEstimation } from './../helpers/api.types';
 import { useAtom } from 'jotai';
-import { estimationStore } from '../store/estimationstore';
+import { estimationAtom } from '../atoms/estimationAtom';
 
 const useEstimations = () => {
-    const [store, setStore] = useAtom(estimationStore);
+    const [atom, setAtom] = useAtom(estimationAtom);
 
     const getEstimations = () => {
-        return store.estimations;
+        return atom.estimations;
     }
 
     const setEstimations = (input: IEstimation[]) => {
-        setStore(x => ({ ...x, estimations: input }))
+        setAtom(x => ({ ...x, estimations: input }))
     }
 
     return { getEstimations, setEstimations };

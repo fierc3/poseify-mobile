@@ -1,6 +1,6 @@
 import { exchangeCodeForToken } from '../helpers/token';
 import { useAtom } from 'jotai';
-import { authAtom } from '../store/authstore';
+import { authAtom } from '../atoms/authAtom';
 import { useNav } from './use-nav';
 
 

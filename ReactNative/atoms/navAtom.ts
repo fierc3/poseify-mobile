@@ -1,5 +1,4 @@
-import { IEstimation } from './../helpers/api.types';
-// @src/store.js
+import { IEstimation } from '../helpers/api.types';
 import { atom } from "jotai";
 
 interface INavAtomState {

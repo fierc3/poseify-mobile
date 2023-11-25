@@ -1,6 +1,6 @@
 import { IEstimation } from './../helpers/api.types';
 import { useAtom } from 'jotai';
-import { navAtom } from '../store/navstore';
+import { navAtom } from '../atoms/navAtom';
 
 const useNav = () => {
     const [nav, setNav] = useAtom(navAtom);
