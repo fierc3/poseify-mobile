@@ -1,9 +1,11 @@
 import { atom } from "jotai";
 
 interface IConfigAtom {
-    devMesssage: string
+    devMesssage: string,
+    parallelProcesses: number
 }
 
 export const configAtom = atom<IConfigAtom>({
-    devMesssage: ''
+    devMesssage: '',
+    parallelProcesses: 1
 });
