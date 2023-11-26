@@ -3,9 +3,12 @@ import { Button, StyleSheet, View } from 'react-native';
 import { useCameraDevice, useCameraPermission, CameraPosition } from 'react-native-vision-camera'
 import { Camera } from 'react-native-vision-camera'
 import { useNav } from '../hooks/use-nav';
-import { IconButton, MD3Colors, Text } from 'react-native-paper';
+import { Icon, IconButton, MD3Colors, Text } from 'react-native-paper';
 import { VideoViewer } from '../components/video/videoViewer';
 import { IconTextButton } from '../components/ui/buttons/iconTextButton';
+import { useEstimations } from '../hooks/use-estimations';
+import { EstimationState } from '../helpers/api.types';
+import { useRemoteConfig } from '../hooks/use-remote-config';
 
 export type Props = {};
 
@@ -14,6 +17,8 @@ const Recording: React.FC<Props> = ({
     const { hasPermission, requestPermission } = useCameraPermission()
     const [permissionChecked, setPermissionChecked] = useState<boolean>(false);
     const { setCurrentPage } = useNav();
+    const { getEstimations } = useEstimations();
+    const { getParallelProcessingLimit } = useRemoteConfig()
     const [cameraLoaded, setCameraLoaded] = useState(false);
     const [isCameraRecording, setIsCameraRecording] = useState(false);
     const camera = useRef<Camera>(null)
@@ -59,6 +64,7 @@ const Recording: React.FC<Props> = ({
 
     setTimeout(() => setPermissionChecked(true), 1000) // we actually don't have a fixed time when we know that it has been checked
 
+    const reachedParallelLimit = (getEstimations() ?? []).filter(e => e.state === EstimationState.Processing || e.state === EstimationState.Queued).length >= getParallelProcessingLimit()
 
     // Function to toggle the camera
     const toggleCameraType = () => {
@@ -66,6 +72,20 @@ const Recording: React.FC<Props> = ({
     };
 
     if (device == null) return <Text>Device has no camera that can record video</Text>
+
+    if (reachedParallelLimit) {
+        return (<View style={{ height: '100%', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+            <IconButton
+                icon="keyboard-backspace"
+                iconColor={MD3Colors.error50}
+                size={30}
+                style={{ position: "absolute", top: 10, left: 10 }}
+                onPress={() => setCurrentPage(0)} />
+            <Icon source="clock-alert-outline" color={MD3Colors.error50} size={50}></Icon>
+            <Text variant='bodyMedium'>You've reached the limit for creating animations.</Text>
+            <Text variant='bodyMedium'>Please try again when your current animations have finished (Limit per user to: <Text variant='bodyMedium' style={{ fontWeight: 'bold' }}>{getParallelProcessingLimit()}</Text>).</Text>
+        </View>)
+    }
 
     return (
         <>
@@ -123,7 +143,7 @@ const Recording: React.FC<Props> = ({
                                     iconSize={50} />
                             </>
                         )}
-                    </> : <View style={{display: permissionChecked ? 'flex' : 'none'}}>
+                    </> : <View style={{ display: permissionChecked ? 'flex' : 'none' }}>
                         <Text>To be able to record, camera access needs to be enabled</Text>
                         <Button title='Click to request permission' onPress={() => requestPermission()} />
                     </View>}

@@ -7,15 +7,18 @@ export const useRemoteConfig = () => {
     const [atom, setAtom] = useAtom(configAtom)
 
     const getDevMessage = () => atom.devMesssage;
+    const getParallelProcessingLimit = () => atom.parallelProcesses;
 
     useEffect(() => {
         if (atom.devMesssage.length > 0) return;
 
-        console.log("Fetching dev message");
+        console.log("Fetching remote configs");
         const fetchData = async () => {
             try {
-                const response = await axios.get("https://amaruq.ch/wp-content/uploads/devmessage.txt");
-                setAtom(x => ({ ...x, devMesssage: response.data }))
+                const configResponse = await axios.get("https://amaruq.ch/wp-content/uploads/config.json", {
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
+                setAtom(x => ({ ...x, devMesssage: configResponse.data.DevMessage, parallelProcesses: configResponse.data.ParallelProcesses ?? 1 }))
             } catch (error) {
                 console.warn("Error fetching dev message:", error);
                 setAtom(x => ({ ...x, devMesssage: '' }))
@@ -24,6 +27,6 @@ export const useRemoteConfig = () => {
         fetchData();
     }, []);
 
-    return { getDevMessage };
+    return { getDevMessage, getParallelProcessingLimit };
 };
 
