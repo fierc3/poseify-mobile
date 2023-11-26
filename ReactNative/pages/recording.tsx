@@ -9,6 +9,7 @@ import { IconTextButton } from '../components/ui/buttons/iconTextButton';
 import { useEstimations } from '../hooks/use-estimations';
 import { EstimationState } from '../helpers/api.types';
 import { useRemoteConfig } from '../hooks/use-remote-config';
+import * as WebBrowser from 'expo-web-browser';
 
 export type Props = {};
 
@@ -115,8 +116,15 @@ const Recording: React.FC<Props> = ({
                                     icon="camera-flip"
                                     iconColor={MD3Colors.error50}
                                     size={30}
-                                    style={{ position: "absolute", top: 10, right: 10 }}
+                                    style={{ position: "absolute", top: 60, right: 10 }}
                                     onPress={() => toggleCameraType()} />
+                                <IconButton
+                                    style={{ position: "absolute", top: 10, right: 10 }}
+                                    icon="help-circle-outline" 
+                                    iconColor={MD3Colors.error50}
+                                    size={30}
+                                    onPress={() => WebBrowser.openBrowserAsync('https://github.com/fierc3/poseify/wiki/Poseify-Mobile-%E2%80%90-Quickstart#recording')}
+                                />
                                 <IconTextButton
                                     text='Start Recording'
                                     onPress={() => (setIsCameraRecording(true), camera.current?.startRecording({
