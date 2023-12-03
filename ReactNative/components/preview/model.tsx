@@ -73,7 +73,7 @@ export const Model: React.FC<Props> = ({ bvhData }) => {
         const skeletonHelper = new THREE.SkeletonHelper(animation.skeleton.bones[0]);
         skeletonHelper.scale.set(10, 10, 10);
         (skeletonHelper.material as any).linewidth = 20; // types doesn't have this correctly
-        mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+        mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), 1.9);
 
         if (!groupRef.current) return;
         groupRef.current.add(skeletonHelper)

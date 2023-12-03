@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 /*
- Based on BvhImporta.JS by Ivo Herzig, 2016 (MIT LIcense)
+ Based on BvhImporter.JS by Ivo Herzig, 2016 (MIT LIcense)
  https://github.com/herzig/BVHImporter
 */
 
