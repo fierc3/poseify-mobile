@@ -45,7 +45,10 @@ const downloadAndStoreAttachment = async (token: string, estimationGuid: string,
           'X-CSRF': '1'
         }
       })
-    const filePath = `${FileSystem.documentDirectory}${name.substring(0, 8)}_${estimationGuid.substring(0, 5)}.${attachmentType.toLocaleLowerCase()}`;
+    const fileEnding = attachmentType === AttachmentType.TBvh ? 't.bvh'
+      : attachmentType === AttachmentType.TFbx ? 't.fbx'
+        : attachmentType.toLocaleLowerCase()
+    const filePath = `${FileSystem.documentDirectory}${name.substring(0, 8)}_${estimationGuid.substring(0, 5)}.${fileEnding}`;
 
     if (!(await checkFileExists(filePath))) {
       // if the file isn't downloaded yet then we should download it

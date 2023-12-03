@@ -184,20 +184,23 @@ export const Viewer: React.FC<Props> = ({ estimation }) => {
                     <pointLight position={[10, 10, 10]} />
                     <Model bvhData={bvhData} />
                 </Canvas>
-                <Button style={{ position: 'absolute', right: 0, top: '40%' }} labelStyle={{ fontSize: 20 }} onPress={() => zoom(-0.4)}>+</Button>
-                <Button style={{ position: 'absolute', right: 0, top: '45%' }} labelStyle={{ fontSize: 20 }} onPress={() => zoom(+0.4)}>-</Button>
+                <Button style={{ position: 'absolute', right: 0, top: '38%' }} labelStyle={{ fontSize: 20 }} onPress={() => zoom(-0.4)}>+</Button>
+                <Button style={{ position: 'absolute', right: 0, top: '43%' }} labelStyle={{ fontSize: 20 }} onPress={() => zoom(+0.4)}>-</Button>
                 {!customRotation && (<Text style={{ position: 'absolute', top: '4%', opacity: 0.3 }} variant='titleMedium'>- Swipe to Rotate -</Text>)}
                 {estimation && isLoaded && (
                     <View style={{ flexGrow: 0.5, justifyContent: 'space-evenly', alignItems: 'center', width: '100%', marginBottom: 10 }}>
-                        <View style={{ flexGrow: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: '100%', gap: 4, zIndex: -1 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: '100%', gap: 4, flexWrap: 'wrap', zIndex: -1 }}>
                             {   // workaround for tags bug
-                                (estimation?.tags[0] ?? '').split(",").filter(tag => tag.length > 0).map((tag, i) => <Chip key={i} icon={getIconName(tag)}>{tag}</Chip>)
+                                (estimation?.tags[0] ?? '').split(",").filter(tag => tag.length > 0).map((tag, i) => 
+                                <Chip key={i} icon={getIconName(tag)}>{tag}</Chip>)
                             }
                         </View>
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: '100%' }}>
-                            <ShareFileButton attachmentType={AttachmentType.Bvh} estimation={estimation} text='Share BVH' />
-                            <ShareFileButton attachmentType={AttachmentType.Fbx} estimation={estimation} text='Share FBX' />
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: '100%', flexWrap: 'wrap' }}>
+                            <ShareFileButton attachmentType={AttachmentType.Bvh} estimation={estimation} text='BVH' />
+                            <ShareFileButton attachmentType={AttachmentType.TBvh} estimation={estimation} text='BVH+T-Pose' />
+                            <ShareFileButton attachmentType={AttachmentType.Fbx} estimation={estimation} text='FBX' />
+                            <ShareFileButton attachmentType={AttachmentType.TFbx} estimation={estimation} text='FBX+T-Pose' />
                         </View>
 
                     </View>
