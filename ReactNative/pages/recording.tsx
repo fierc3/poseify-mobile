@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
-import { useCameraDevice, useCameraPermission, CameraPosition } from 'react-native-vision-camera'
+import { useCameraDevice, useCameraPermission, CameraPosition, useCameraFormat } from 'react-native-vision-camera'
 import { Camera } from 'react-native-vision-camera'
 import { useNav } from '../hooks/use-nav';
 import { Icon, IconButton, MD3Colors, Text } from 'react-native-paper';
@@ -26,6 +26,10 @@ const Recording: React.FC<Props> = ({
     const [videoPath, setVideoPath] = useState<string | null>(null);
     const [cameraType, setCameraType] = useState<CameraPosition>('back'); // 'front' or 'back'
     const device = useCameraDevice(cameraType)
+    const format = useCameraFormat(device, [
+        { videoResolution: { width: 1920, height: 1080 } },
+        { fps: 60 },
+    ])
 
     const [countdown, setCountdown] = useState(10); // Set initial countdown time
     const [isActive, setIsActive] = useState(false);
@@ -101,8 +105,8 @@ const Recording: React.FC<Props> = ({
                             onInitialized={() => setCameraLoaded(true)}
                             audio={false}
                             video={true}
+                            format={format}
                         />
-
                         {!cameraLoaded && (<Text style={{ color: "purple" }}>Loading...</Text>)}
                         {cameraLoaded && !isCameraRecording && (
                             <>
@@ -120,7 +124,7 @@ const Recording: React.FC<Props> = ({
                                     onPress={() => toggleCameraType()} />
                                 <IconButton
                                     style={{ position: "absolute", top: 10, right: 10 }}
-                                    icon="help-circle-outline" 
+                                    icon="help-circle-outline"
                                     iconColor={MD3Colors.error50}
                                     size={30}
                                     onPress={() => WebBrowser.openBrowserAsync('https://github.com/fierc3/poseify/wiki/Poseify-Mobile-%E2%80%90-Quickstart#recording')}
