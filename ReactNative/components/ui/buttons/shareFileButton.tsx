@@ -14,7 +14,7 @@ enum LoadState {
     NotStarted
 }
 
-export const ShareFileButton: React.FC<shareFileButtonProps> = ({ onShareFinished, icon, iconColor, text, containerStyle, iconSize, estimation, attachmentType }) => {
+export const ShareFileButton: React.FC<shareFileButtonProps> = ({ onShareFinished, icon, iconColor, text, iconSize, estimation, attachmentType }) => {
 
     const { accessToken } = useAccessToken();
     const [loadState, setLoadState] = useState<LoadState>(LoadState.NotStarted);
@@ -50,7 +50,7 @@ export const ShareFileButton: React.FC<shareFileButtonProps> = ({ onShareFinishe
 
     return (
         <IconTextButton
-            icon={icon ?? 'share'}
+            icon={icon ?? 'share-variant'}
             iconColor={iconColor}
             iconSize={iconSize}
             disabled={loadState === LoadState.Loading}

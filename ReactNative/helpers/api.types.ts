@@ -33,7 +33,9 @@ export enum AttachmentType{
     Preview ="Preview",
     Npz = "Npz",
     Bvh = "Bvh",
-    Fbx = "Fbx"
+    TBvh = "TBvH",
+    Fbx = "Fbx",
+    TFbx = "TFbx"
 }
 
 export interface IUserProfile {
