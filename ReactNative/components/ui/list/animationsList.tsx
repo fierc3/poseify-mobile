@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccessToken } from "../../../hooks/use-access-token";
 import { useNav } from "../../../hooks/use-nav";
 import { deleteAnimation, getUserEstimations } from "../../../helpers/api";
@@ -27,9 +27,9 @@ export const AnimationsList: React.FC = () => {
         if (!initLoaded) {
             setInitiLoaded(true);
         }
-        const result = await getUserEstimations(accessToken.accessToken);
 
-        if (!arraysAreEqual(result, getEstimations() ?? [])) {
+        const result = await getUserEstimations(accessToken.accessToken);
+        if (getEstimations() == null || !arraysAreEqual(result, getEstimations() ?? [])) {
             setEstimations(result);
         }
     }
